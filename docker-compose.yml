@@ -1,6 +1,15 @@
 version: '3'
 services:
+  mongo:
+    container_name: dev-platform-mongo
+    image: mongo
+    volumes:
+      - /data/db
+    ports:
+      - '27017:27017'
+
   client:
+    container_name: dev-platform-client
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -10,8 +19,9 @@ services:
     ports:
       - '3000:3000'
     restart: on-failure
-    container_name: client
+
   auth-server:
+    container_name: dev-platform-auth-server
     build:
       context: ./auth-server
       dockerfile: Dockerfile
@@ -21,8 +31,13 @@ services:
     ports:
       - '3001:3001'
     restart: on-failure
-    container_name: auth-server
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
   nginx: 
+    container_name: dev-platform-nginx
     build: ./nginx
     ports:
       - 80:80
