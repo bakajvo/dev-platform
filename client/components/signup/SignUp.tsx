@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Container} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
@@ -9,6 +9,7 @@ import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {SignUpRequest} from "../../models/request/SignUpRequest";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -30,9 +31,35 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignUp: React.FunctionComponent = () => {
+interface SignUpProps {
+    onSignUp: (user: SignUpRequest) => void;
+}
+
+const SignUp: React.FunctionComponent<SignUpProps> = ({onSignUp}) => {
 
     const classes = useStyles();
+
+    const defaultUser: SignUpRequest = {
+        nick: '',
+        email: '',
+        firstName: '',
+        lastName: '',
+        password: '',
+    };
+
+    const [user, setUser] = useState<SignUpRequest>(defaultUser);
+
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUser({
+            ...user,
+            [event.target.name]: event.target.value
+        })
+    };
+
+    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        onSignUp(user);
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -43,11 +70,13 @@ const SignUp: React.FunctionComponent = () => {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={onSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                autoComplete="fname"
+                                value={user.firstName}
+                                onChange={onChange}
+                                autoComplete="firstName"
                                 name="firstName"
                                 variant="outlined"
                                 required
@@ -59,17 +88,21 @@ const SignUp: React.FunctionComponent = () => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
+                                value={user.lastName}
+                                onChange={onChange}
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="lastName"
                                 label="Last Name"
                                 name="lastName"
-                                autoComplete="lname"
+                                autoComplete="lastName"
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                value={user.nick}
+                                onChange={onChange}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -81,6 +114,8 @@ const SignUp: React.FunctionComponent = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                value={user.email}
+                                onChange={onChange}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -92,6 +127,8 @@ const SignUp: React.FunctionComponent = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                value={user.password}
+                                onChange={onChange}
                                 variant="outlined"
                                 required
                                 fullWidth
