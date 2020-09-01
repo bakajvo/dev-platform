@@ -13,6 +13,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {DRAWER_WIDTH} from "../../styles/theme";
+import {useRouter} from "next/router";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const TopMenu: React.FunctionComponent = () => {
 
     const classes = useStyles();
+    const router = useRouter();
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -91,8 +93,8 @@ const TopMenu: React.FunctionComponent = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            <MenuItem onClick={() => router.push('/sign-in')}>Sign In</MenuItem>
+            <MenuItem onClick={() => router.push('/sign-up')}>Sign Up</MenuItem>
         </Menu>
     );
 
